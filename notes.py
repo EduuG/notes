@@ -196,72 +196,76 @@ while True:
             window['-TREE-'].update(treedata)
                 
     elif event == '🗑':
-        tarefa = window['-tasks-'].get_indexes()
-        checkbox(values['-tasks-'][0], tarefa[0], False, True)
-        window['-tasks-'].update(values=tasks, set_to_index=[tarefa[0]], scroll_to_index=(tarefa[0]))
-        _percent()
-        window['-percent-'].update('Concluído: {}{}'.format(_percent(), '%'))
-        _save()
-        window['-TREE-'].update(treedata)
+        if values['-tasks-']:
+            tarefa = window['-tasks-'].get_indexes()
+            checkbox(values['-tasks-'][0], tarefa[0], False, True)
+            window['-tasks-'].update(values=tasks, set_to_index=[tarefa[0]], scroll_to_index=(tarefa[0]))
+            _percent()
+            window['-percent-'].update('Concluído: {}{}'.format(_percent(), '%'))
+            _save()
+            window['-TREE-'].update(treedata)
 
     elif event == '▲':
-        temp = {}
-        tarefa = window['-tasks-'].get_indexes()
-        temp["item"] = values['-tasks-'][0][4:]
-        temp["index"] = tarefa[0]
-        if temp["item"] in checkeds:
-            if temp["index"] > 0:
-                tasks.pop(tarefa[0])
-                tasks.insert((temp["index"] - 1), "[X] {}".format(temp["item"]))
-                window['-tasks-'].update(values=tasks, set_to_index=[temp["index"] - 1], scroll_to_index=(temp["index"] - 1))
-                window['-TREE-'].update(treedata)
+        if values['-tasks-']:
+            temp = {}
+            tarefa = window['-tasks-'].get_indexes()
+            temp["item"] = values['-tasks-'][0][4:]
+            temp["index"] = tarefa[0]
+            if temp["item"] in checkeds:
+                if temp["index"] > 0:
+                    tasks.pop(tarefa[0])
+                    tasks.insert((temp["index"] - 1), "[X] {}".format(temp["item"]))
+                    window['-tasks-'].update(values=tasks, set_to_index=[temp["index"] - 1], scroll_to_index=(temp["index"] - 1))
+                    window['-TREE-'].update(treedata)
+                else:
+                    pass
             else:
-                pass
-        else:
-            if temp["index"] > 0:
-                tasks.pop(tarefa[0])
-                tasks.insert((temp["index"] - 1), "[ ] {}".format(temp["item"]))
-                window['-tasks-'].update(values=tasks, set_to_index=[temp["index"] - 1], scroll_to_index=(temp["index"] - 1))
-                window['-TREE-'].update(treedata)
-            else:
-                pass
-        _save()
+                if temp["index"] > 0:
+                    tasks.pop(tarefa[0])
+                    tasks.insert((temp["index"] - 1), "[ ] {}".format(temp["item"]))
+                    window['-tasks-'].update(values=tasks, set_to_index=[temp["index"] - 1], scroll_to_index=(temp["index"] - 1))
+                    window['-TREE-'].update(treedata)
+                else:
+                    pass
+            _save()
 
     elif event == '▼':
-        temp = {}
-        tarefa = window['-tasks-'].get_indexes()
-        temp["item"] = values['-tasks-'][0][4:]
-        temp["index"] = tarefa[0]
-        if temp["item"] in checkeds:
-            if temp["index"] < (len(tasks) - 1):
-                tasks.pop(tarefa[0])
-                tasks.insert((temp["index"] + 1), "[X] {}".format(temp["item"]))
-                window['-tasks-'].update(values=tasks, set_to_index=[temp["index"] + 1], scroll_to_index=(temp["index"] + 1))
-                window['-TREE-'].update(treedata)
+        if values['-tasks-']:
+            temp = {}
+            tarefa = window['-tasks-'].get_indexes()
+            temp["item"] = values['-tasks-'][0][4:]
+            temp["index"] = tarefa[0]
+            if temp["item"] in checkeds:
+                if temp["index"] < (len(tasks) - 1):
+                    tasks.pop(tarefa[0])
+                    tasks.insert((temp["index"] + 1), "[X] {}".format(temp["item"]))
+                    window['-tasks-'].update(values=tasks, set_to_index=[temp["index"] + 1], scroll_to_index=(temp["index"] + 1))
+                    window['-TREE-'].update(treedata)
+                else:
+                    pass
             else:
-                pass
-        else:
-            if temp["index"] < (len(tasks) - 1):
-                tasks.pop(tarefa[0])
-                tasks.insert((temp["index"] + 1), "[ ] {}".format(temp["item"]))
-                window['-tasks-'].update(values=tasks, set_to_index=[temp["index"] + 1], scroll_to_index=(temp["index"] + 1))
-                window['-TREE-'].update(treedata)
-            else:
-                pass
-        _save()
+                if temp["index"] < (len(tasks) - 1):
+                    tasks.pop(tarefa[0])
+                    tasks.insert((temp["index"] + 1), "[ ] {}".format(temp["item"]))
+                    window['-tasks-'].update(values=tasks, set_to_index=[temp["index"] + 1], scroll_to_index=(temp["index"] + 1))
+                    window['-TREE-'].update(treedata)
+                else:
+                    pass
+            _save()
         
     elif event == '-confirm-':
-        temp = {}
-        tarefa = window['-tasks-'].get_indexes()
-        temp["item"] = values['-tasks-'][0][4:]
-        temp["index"] = tarefa[0]
-        tasks.pop(tarefa[0])
-        checkbox(temp["item"], temp["index"], True, False)
-        window['-tasks-'].update(values=tasks, set_to_index=[temp["index"]], scroll_to_index=(temp["index"]))
-        _percent()
-        window['-percent-'].update('Concluído: {}{}'.format(_percent(), '%'))
-        _save()
-        window['-TREE-'].update(treedata)
+        if values['-tasks-']:
+            temp = {}
+            tarefa = window['-tasks-'].get_indexes()
+            temp["item"] = values['-tasks-'][0][4:]
+            temp["index"] = tarefa[0]
+            tasks.pop(tarefa[0])
+            checkbox(temp["item"], temp["index"], True, False)
+            window['-tasks-'].update(values=tasks, set_to_index=[temp["index"]], scroll_to_index=(temp["index"]))
+            _percent()
+            window['-percent-'].update('Concluído: {}{}'.format(_percent(), '%'))
+            _save()
+            window['-TREE-'].update(treedata)
 
     elif event == 'Histórico':
         window['-COL2-'].update(visible=True)
@@ -277,8 +281,6 @@ while True:
         if values['-tasks-'][0][4:] in checkeds:
             window['-confirm-'].update('☐')
         else:
-            print(values['-tasks-'][0])
-            print(checkeds)
             window['-confirm-'].update('☑')
             
 window.close()
