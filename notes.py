@@ -11,9 +11,20 @@ lista = []          # Todas as tarefas a serem realizadas
 checkeds = []       # Tarefas realizadas
 uncheckeds = []     # Tarefas não realizadas
 
-history_exists = os.path.exists('/home/eduardo/Desktop/python_projetos/notes/Histórico/{}'.format(date.today()))
+current_directory = os.getcwd()
 
-with open(r'/home/eduardo/Desktop/python_projetos/notes/Tarefas/tarefas', 'r+') as fp:
+if 'Histórico' and 'Tarefas' in os.listdir(current_directory):
+    pass
+else:
+    os.mkdir('Histórico')
+    os.mkdir('Tarefas')
+    os.mknod('{}/Tarefas/tarefas'.format(current_directory))
+    os.mknod('{}/Tarefas/checkeds'.format(current_directory))
+    os.mknod('{}/Tarefas/uncheckeds'.format(current_directory))
+
+history_exists = os.path.exists('{}/Histórico/{}'.format(current_directory, date.today()))
+
+with open(r'{}/Tarefas/tarefas'.format(current_directory), 'r+') as fp:
     if history_exists == False:
         fp.truncate(0)
 
@@ -21,7 +32,7 @@ with open(r'/home/eduardo/Desktop/python_projetos/notes/Tarefas/tarefas', 'r+') 
         x = line[:-1]
         lista.append(x)
         
-with open(r'/home/eduardo/Desktop/python_projetos/notes/Tarefas/checkeds', 'r+') as fp:
+with open(r'{}/Tarefas/checkeds'.format(current_directory), 'r+') as fp:
     if history_exists == False:
         fp.truncate(0)
 
@@ -29,7 +40,7 @@ with open(r'/home/eduardo/Desktop/python_projetos/notes/Tarefas/checkeds', 'r+')
         x = line[:-1]
         checkeds.append(x)
 
-with open(r'/home/eduardo/Desktop/python_projetos/notes/Tarefas/uncheckeds', 'r+') as fp:
+with open(r'{}/Tarefas/uncheckeds'.format(current_directory), 'r+') as fp:
     if history_exists == False:
         fp.truncate(0)
 
@@ -38,11 +49,11 @@ with open(r'/home/eduardo/Desktop/python_projetos/notes/Tarefas/uncheckeds', 'r+
         uncheckeds.append(x)
 
 treedata = sg.TreeData()
-history_path = ('/home/eduardo/Desktop/python_projetos/notes/Histórico/')
+history_path = ('{}/Histórico/'.format(current_directory))
 history = os.listdir(history_path)
 
 for i in history:
-    file = open('/home/eduardo/Desktop/python_projetos/notes/Histórico/{}'.format(i))
+    file = open('{}/Histórico/{}'.format(current_directory, i))
     lines = file.readlines()
     treedata.Insert("", i, i, lines[0][11:])
     for line in lines:
@@ -114,9 +125,9 @@ def _percent():
         return float(f'{percent:.2f}')
 
 def _save():
-    tarefas_file = '/home/eduardo/Desktop/python_projetos/notes/Tarefas/tarefas'    
-    checkeds_file = '/home/eduardo/Desktop/python_projetos/notes/Tarefas/checkeds'    
-    uncheckeds_file = '/home/eduardo/Desktop/python_projetos/notes/Tarefas/uncheckeds'    
+    tarefas_file = '{}/Tarefas/tarefas'.format(current_directory)    
+    checkeds_file = '{}/Tarefas/checkeds'.format(current_directory)    
+    uncheckeds_file = '{}/Tarefas/uncheckeds'.format(current_directory)    
 
     with open(r'{}'.format(tarefas_file), 'w') as fp:
         for i in lista:
@@ -130,7 +141,7 @@ def _save():
         for i in uncheckeds:
             fp.write("{}\n".format(i))
 
-    with open(r'/home/eduardo/Desktop/python_projetos/notes/Histórico/{}'.format(date.today()), 'w') as fp:
+    with open(r'{}/Histórico/{}'.format(current_directory, date.today()), 'w') as fp:
         fp.write("Concluído: {}%".format(_percent()))
         if _percent() == 100.0:
             fp.write(" - PARABÉNS!!\n\n")
@@ -220,10 +231,6 @@ while True:
                 pass
         _save()
 
-        #print(lista)
-        #print(checkeds, "---", uncheckeds)
-        
-        
     elif event == '▼':
         temp = {}
         tarefa = window['-tarefas-'].get_indexes()
@@ -247,10 +254,6 @@ while True:
             else:
                 pass
         _save()
-       # window['-tarefas-'].update(values=lista, set_to_index=[temp["index"] + 1], scroll_to_index=(temp["index"] + 1))
-
-        #print(lista)
-        #print(checkeds, "---", uncheckeds)
         
     elif event == 'Con':
         temp = {}
