@@ -13,19 +13,19 @@ uncheckeds = []     # Uncompleted tasks
 
 current_directory = os.getcwd()
 
-if 'Historic' and 'Tasks' in os.listdir(current_directory):
+if 'History' and 'Tasks' in os.listdir(current_directory):
     pass
 else:
-    os.mkdir('Historic')
+    os.mkdir('History')
     os.mkdir('Tasks')
     os.mknod('{}/Tasks/tasks'.format(current_directory))
     os.mknod('{}/Tasks/checkeds'.format(current_directory))
     os.mknod('{}/Tasks/uncheckeds'.format(current_directory))
 
-history_exists = os.path.exists('{}/Historic/{}'.format(current_directory, date.today()))
+history_exists = os.path.exists('{}/History/{}'.format(current_directory, date.today()))
 
 with open(r'{}/Tasks/tasks'.format(current_directory), 'r+') as fp:
-    if history_exists == False:
+    if history_exists is False:
         fp.truncate(0)
 
     for line in fp:
@@ -33,7 +33,7 @@ with open(r'{}/Tasks/tasks'.format(current_directory), 'r+') as fp:
         tasks.append(x)
         
 with open(r'{}/Tasks/checkeds'.format(current_directory), 'r+') as fp:
-    if history_exists == False:
+    if history_exists is False:
         fp.truncate(0)
 
     for line in fp:
@@ -41,7 +41,7 @@ with open(r'{}/Tasks/checkeds'.format(current_directory), 'r+') as fp:
         checkeds.append(x)
 
 with open(r'{}/Tasks/uncheckeds'.format(current_directory), 'r+') as fp:
-    if history_exists == False:
+    if history_exists is False:
         fp.truncate(0)
 
     for line in fp:
@@ -49,11 +49,11 @@ with open(r'{}/Tasks/uncheckeds'.format(current_directory), 'r+') as fp:
         uncheckeds.append(x)
 
 treedata = sg.TreeData()
-history_path = ('{}/Historic/'.format(current_directory))
+history_path = ('{}/History/'.format(current_directory))
 history = os.listdir(history_path)
 
 for i in history:
-    file = open('{}/Historic/{}'.format(current_directory, i))
+    file = open('{}/History/{}'.format(current_directory, i))
     lines = file.readlines()
     treedata.Insert("", i, i, lines[0][11:])
     for line in lines:
@@ -86,7 +86,7 @@ def checkbox(item, index, checked, is_deleted):
     icon_uncheck = '[ ]'
     icon_check = '[X]'
 
-    if checked == True and is_deleted == False:
+    if checked is True and is_deleted is False:
         if item not in checkeds and item not in uncheckeds:
             checkeds.append(item)
             tasks.insert(index, '{} {}'.format(icon_check, item))
@@ -104,16 +104,16 @@ def checkbox(item, index, checked, is_deleted):
             tasks.insert(index, '{} {}'.format(icon_check, item))
             window['-confirm-'].update('☐')
 
-    if checked == False and is_deleted == False:
+    if checked is False and is_deleted is False:
             if item not in uncheckeds and item not in checkeds:
                 uncheckeds.append(item)
                 tasks.insert(index, '{} {}'.format(icon_uncheck, item))
 
-    if is_deleted == True and item[4:] in uncheckeds:
+    if is_deleted is True and item[4:] in uncheckeds:
         tasks.remove(item)
         uncheckeds.remove(item[4:])
 
-    if is_deleted == True and item[4:] in checkeds:
+    if is_deleted is True and item[4:] in checkeds:
         tasks.remove(item)
         checkeds.remove(item[4:])
 
@@ -141,7 +141,7 @@ def _save():
         for i in uncheckeds:
             fp.write("{}\n".format(i))
 
-    with open(r'{}/Historic/{}'.format(current_directory, date.today()), 'w') as fp:
+    with open(r'{}/History/{}'.format(current_directory, date.today()), 'w') as fp:
         fp.write("Concluído: {}%".format(_percent()))
         if _percent() == 100.0:
             fp.write(" - PARABÉNS!!\n\n")
@@ -164,15 +164,15 @@ layout_r = [ [sg.Button('☑', font='_ 16', key='-confirm-')],
              [sg.Button('▼', font='_ 14')],
              [sg.Button('🗑', font='_ 16')]]
 
-layout_historic = [ [sg.Tree(treedata, ['Concluído'], expand_x=True, expand_y=True, font='Iosevka 12', col0_width=(53), key='-TREE-')],
+layout_history = [ [sg.Tree(treedata, ['Concluído'], expand_x=True, expand_y=True, font='Iosevka 12', col0_width=(53), key='-TREE-')],
                     [sg.Button("<"),
                     sg.Push(),
                     sg.Button("Sair", key="-SAIR2-")] ]
 
-layout = [ [sg.T('Tarefas', font='_ 14', justification='c', expand_x=True, s=(52,0))],
+layout = [ [sg.T('ー Tarefas ー', font='_ 14', justification='c', expand_x=True, s=(52,0))],
            [sg.Col(layout_l, p=0, expand_x=True, expand_y=True, key='-COL1_L-'), 
             sg.Col(layout_r, p=0, key='-COL1_R-'),
-            sg.Col(layout_historic, key='-COL2-', visible=False, expand_x=True, expand_y=True)] ]
+            sg.Col(layout_history, key='-COL2-', visible=False, expand_x=True, expand_y=True)] ]
 
 window = MyWindow('Lista de Tasks', layout, font='Iosveka 10', finalize=True, location=(0,0))
 window.my_move_to_center()
@@ -280,7 +280,7 @@ while True:
     elif event == '-tasks-':
         if values['-tasks-'][0][4:] in checkeds:
             window['-confirm-'].update('☐')
-        else:
+        elif values['-tasks-'][0][4:] in uncheckeds:
             window['-confirm-'].update('☑')
             
 window.close()
